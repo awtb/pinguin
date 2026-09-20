@@ -1,4 +1,11 @@
 package pinger
 
-// Ping is a placeholder for the ping implementation.
-func Ping() {}
+import "pinguin/internal/pinger/icmp"
+
+type Pinger struct {
+	Host string
+}
+
+func (p *Pinger) Ping(packet *icmp.Packet) {
+
+}
