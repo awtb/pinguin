@@ -1,4 +1,4 @@
-package net
+package icmp
 
 type Packet struct {
 	Type           uint8
