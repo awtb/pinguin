@@ -59,3 +59,7 @@ func Marshal(packet *Packet) []byte {
 
 	return data
 }
+
+func Unmarshal(data []byte) Packet {
+
+}

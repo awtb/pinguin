@@ -1,7 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"pinguin/internal/pinger"
+)
 
 func main() {
-	fmt.Println("Pinguin skeleton")
+	println("pinger v.0.0.0")
+
+	var pinger = pinger.Pinger{}
+
+	//
+	pinger.Ping()
+
 }
