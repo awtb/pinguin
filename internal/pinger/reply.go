@@ -7,7 +7,7 @@ import (
 )
 
 type Reply struct {
-	Packet icmp.Packet
+	Packet *icmp.Packet
 	From   net.IP
 	RTT    time.Duration
 	TTL    int
