@@ -1,5 +1,7 @@
 package icmp
 
+import "fmt"
+
 type Packet struct {
 	Type           uint8
 	Code           uint8
@@ -23,7 +25,7 @@ func BuildPacket(packetType uint8, code uint8, identifier uint16, seqNum uint16)
 }
 
 func CalculateChecksum(packet *Packet) uint16 {
-	bytes := Marshal(packet)
+	bytes := packet.Marshal()
 
 	pt1 := uint32(bytes[0])<<8 | uint32(bytes[1])
 	pt2 := uint32(bytes[2])<<8 | uint32(bytes[3])
@@ -36,7 +38,7 @@ func CalculateChecksum(packet *Packet) uint16 {
 	return ^uint16(sum)
 }
 
-func Marshal(packet *Packet) []byte {
+func (packet *Packet) Marshal() []byte {
 	data := make([]byte, 8)
 
 	data[0] = packet.Type
@@ -60,6 +62,16 @@ func Marshal(packet *Packet) []byte {
 	return data
 }
 
-func Unmarshal(data []byte) Packet {
+func Unmarshal(data []byte) (Packet, error) {
+	if len(data) < 8 {
+		return Packet{}, fmt.Errorf("icmp: packet too short: got %d bytes, need at least 8", len(data))
+	}
 
+	return Packet{
+		Type:           data[0],
+		Code:           data[1],
+		Checksum:       uint16(data[2])<<8 | uint16(data[3]),
+		Identifier:     uint16(data[4])<<8 | uint16(data[5]),
+		SequenceNumber: uint16(data[6])<<8 | uint16(data[7]),
+	}, nil
 }
