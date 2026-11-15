@@ -29,9 +29,9 @@ func buildPingPacket() *icmp.Packet {
 }
 
 func (p *Pinger) sendBytes(destination net.Addr, data []byte) error {
-	_, err := p.connection.WriteTo(data, destination)
+	bytesSent, err := p.connection.WriteTo(data, destination)
 
-	if err != nil {
+	if err != nil || bytesSent != len(data) {
 		return fmt.Errorf("Some problem with sending bytes to the needed destination")
 	}
 
