@@ -25,6 +25,7 @@ func main() {
 	}
 
 	println(reply.Packet.Type)
+	println(reply.From.String())
 	println(reply.Packet.Identifier)
 	println(reply.Packet.Code)
 	println(reply.Packet.Checksum)
