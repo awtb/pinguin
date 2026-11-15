@@ -23,8 +23,8 @@ func (p *Pinger) InitializeConnection() error {
 	return nil
 }
 
-func buildPingPacket() *icmp.Packet {
-	p := icmp.BuildPacket(8, 0, 30, 0)
+func buildPingPacket(seqNum uint16) *icmp.Packet {
+	p := icmp.BuildPacket(8, 0, 30, seqNum)
 	return p
 }
 
@@ -88,7 +88,7 @@ func (p *Pinger) Ping(addr netip.Addr) (Reply, error) {
 		return Reply{}, fmt.Errorf("Please, call Pinger.InitializeConnection(), before ping.")
 	}
 
-	pingPacket := buildPingPacket()
+	pingPacket := buildPingPacket(1)
 
 	err := p.sendPacket(addr, pingPacket)
 
