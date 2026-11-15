@@ -52,19 +52,19 @@ func (p *Pinger) receiveBytes() (net.Addr, []byte, error) {
 		return nil, nil, fmt.Errorf("Zero bytes received")
 	}
 
-	return addr, buffer, nil
+	return addr, buffer[:receivedBytesCount], nil
 
 }
 
-func (p *Pinger) receivePacket() (*icmp.Packet, error) {
-	_, bytes, err := p.receiveBytes()
+func (p *Pinger) receivePacket() (net.Addr, *icmp.Packet, error) {
+	addr, bytes, err := p.receiveBytes()
 	packet, err := icmp.Unmarshal(bytes)
 
 	if err != nil {
-		return nil, fmt.Errorf("Problem at deserialization")
+		return nil, nil, fmt.Errorf("Problem at deserialization")
 	}
 
-	return &packet, nil
+	return addr, &packet, nil
 }
 
 func (p *Pinger) sendPacket(destination netip.Addr, packet *icmp.Packet) error {
@@ -96,7 +96,7 @@ func (p *Pinger) Ping(addr netip.Addr) (Reply, error) {
 		return Reply{}, err
 	}
 
-	receivedPacket, err := p.receivePacket()
+	sourceAddress, receivedPacket, err := p.receivePacket()
 
 	if err != nil {
 		return Reply{}, nil
@@ -104,7 +104,7 @@ func (p *Pinger) Ping(addr netip.Addr) (Reply, error) {
 
 	return Reply{
 		Packet: receivedPacket,
-		From:   net.ParseIP(addr.String()),
+		From:   net.ParseIP(sourceAddress.String()),
 		RTT:    0,
 		TTL:    0,
 	}, nil
