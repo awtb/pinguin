@@ -19,12 +19,12 @@ func BuildPacket(packetType uint8, code uint8, identifier uint16, seqNum uint16)
 		SequenceNumber: seqNum,
 	}
 
-	packet.Checksum = CalculateChecksum(packet)
+	packet.Checksum = calculateChecksum(packet)
 
 	return packet
 }
 
-func CalculateChecksum(packet *Packet) uint16 {
+func calculateChecksum(packet *Packet) uint16 {
 	bytes := packet.Marshal()
 
 	pt1 := uint32(bytes[0])<<8 | uint32(bytes[1])
